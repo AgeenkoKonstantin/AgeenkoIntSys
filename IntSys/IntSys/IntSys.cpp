@@ -50,7 +50,7 @@ void CheckIfUserIsInactive()
                 {
                     Message m(session.second->id, MR_BROKER, MT_EXIT);
                     session.second->MessageAdd(m);
-                    cout << "Session " + to_string(session.first) + "deleted" << endl;
+                    cout << "Session " + to_string(session.first) + " deleted" << endl;
                     sessions.erase(session.first);
                     break;
                 }
@@ -58,6 +58,7 @@ void CheckIfUserIsInactive()
         }
         cs.Lock();
         cout << "CheckIfUserIsInactive() sleeping" << endl;
+        cout << GetActiveUsers() << endl;
         cs.Unlock();
         Sleep(timespan);
     }
@@ -94,6 +95,7 @@ void ClientProcessing(SOCKET hSock)
             cout << session->id << " (" << session->GetName() << ") connected" << endl;
             cs.Unlock();
             session->SetLastSeen();
+
         }
         break;
     }
@@ -111,6 +113,7 @@ void ClientProcessing(SOCKET hSock)
         if (iSession != sessions.end())
         {
             iSession->second->MessageSend(s);
+            //printf("update session.lastseen\n");
             iSession->second->SetLastSeen();
         }
         break;
